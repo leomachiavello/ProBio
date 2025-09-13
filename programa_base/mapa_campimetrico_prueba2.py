@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import json
+from matplotlib.backends.backend_pdf import PdfPages
 
 def leer_datos_json(archivo):
     """Lee los datos de un archivo JSON y devuelve una matriz de 8x9 con los valores de Total Deviation"""
@@ -53,6 +54,8 @@ def graficar_mapa_color(matriz):
     # Mostrar el gráfico
     plt.tight_layout()
     plt.show()
+    
+    return fig
 
 def graficar_mapa_numeros_L(matriz):
     """Genera un mapa de la matriz con los valores numéricos en cada celda, con fondo blanco"""
@@ -87,6 +90,8 @@ def graficar_mapa_numeros_L(matriz):
     # Mostrar el gráfico
     plt.tight_layout()
     plt.show()
+    
+    return fig
 
 def graficar_mapa_numeros_R(matriz):
     """Genera un mapa de la matriz con los valores numéricos en cada celda, con fondo blanco"""
@@ -121,21 +126,32 @@ def graficar_mapa_numeros_R(matriz):
     # Mostrar el gráfico
     plt.tight_layout()
     plt.show()
-
-
+    
+    return fig
 
 def main():
     archivo = 'datos.json'  # Nombre del archivo
     matriz = leer_datos_json(archivo)  # Lee los datos del JSON
     
-    # Habilitar el modo interactivo para que ambas ventanas se abran simultáneamente
-    plt.ion()  # Modo interactivo
+    # Crear un archivo PDF para guardar todos los gráficos
+    with PdfPages('mapas_campimetricos_resultados.pdf') as pdf:
+        # Habilitar el modo interactivo para que ambas ventanas se abran simultáneamente
+        plt.ion()  # Modo interactivo
+        
+        # Graficar y guardar el mapa de color
+        fig_color = graficar_mapa_color(matriz)
+        pdf.savefig(fig_color)
+        #plt.close(fig_color)
+        
+        # Graficar y guardar el mapa numérico para ojo izquierdo
+        fig_numeros_L = graficar_mapa_numeros_L(matriz)
+        pdf.savefig(fig_numeros_L)
+        #plt.close(fig_numeros_L)
+        
+        # Deshabilitar el modo interactivo si es necesario
+        plt.ioff()  # Modo interactivo desactivado
     
-    graficar_mapa_color(matriz)  # Graficar el mapa con los datos (ventana 1)
-    graficar_mapa_numeros_L(matriz)  # Graficar el mapa con los números en lugar de colores (ventana 2)
-    
-    # Deshabilitar el modo interactivo si es necesario
-    plt.ioff()  # Modo interactivo desactivado
+    print("Los gráficos se han guardado en 'mapas_campimetricos.pdf'")
 
 if __name__ == "__main__":
     main()
