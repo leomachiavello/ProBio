@@ -22,9 +22,10 @@ def leer_datos_json(archivo):
 
     return matriz
 
-def graficar_mapa(matriz):
+def graficar_mapa_color(matriz):
     """Genera un mapa de calor basado en la matriz de Total Deviation con ciertos recuadros en blanco"""
     fig, ax = plt.subplots()
+    fig.patch.set_facecolor('white')  # Establecer el fondo blanco
     
     # Usamos el colormap 'coolwarm' y configuramos NaN para ser blanco
     cmap = plt.get_cmap('coolwarm')
@@ -53,10 +54,88 @@ def graficar_mapa(matriz):
     plt.tight_layout()
     plt.show()
 
+def graficar_mapa_numeros_L(matriz):
+    """Genera un mapa de la matriz con los valores numéricos en cada celda, con fondo blanco"""
+    fig, ax = plt.subplots()
+    fig.patch.set_facecolor('white')  # Establecer el fondo blanco
+    
+    # Crear una matriz de fondo blanco
+    ax.imshow(np.ones_like(matriz), cmap='gray', interpolation='nearest', aspect='auto', vmin=0, vmax=1)
+    
+    # Colocar los números en cada celda
+    for y in range(8):
+        for x in range(9):
+            # Si el valor es NaN (fuera de rango), no colocar texto
+            if not np.isnan(matriz[y, x]):
+                ax.text(x, y, f'{matriz[y, x]:.2f}', ha='center', va='center', color='black', fontsize=12)
+    
+    # Títulos y etiquetas
+    ax.set_title("Mapa Campimétrico - Total Deviation")
+    ax.set_xlabel("Coordenada X (0-8)")
+    ax.set_ylabel("Coordenada Y (0-7)")
+    
+    # Configurar los ticks para que coincidan con las coordenadas
+    ax.set_xticks(np.arange(0, 9))
+    ax.set_yticks(np.arange(0, 8))
+
+    # Línea horizontal en el medio
+    ax.axhline(y=3.5, color='black', linewidth=1)
+
+    # Línea vertical en el medio
+    ax.axvline(x=4.5, color='black', linewidth=1)
+    
+    # Mostrar el gráfico
+    plt.tight_layout()
+    plt.show()
+
+def graficar_mapa_numeros_R(matriz):
+    """Genera un mapa de la matriz con los valores numéricos en cada celda, con fondo blanco"""
+    fig, ax = plt.subplots()
+    fig.patch.set_facecolor('white')  # Establecer el fondo blanco
+    
+    # Crear una matriz de fondo blanco
+    ax.imshow(np.ones_like(matriz), cmap='gray', interpolation='nearest', aspect='auto', vmin=0, vmax=1)
+    
+    # Colocar los números en cada celda
+    for y in range(8):
+        for x in range(9):
+            # Si el valor es NaN (fuera de rango), no colocar texto
+            if not np.isnan(matriz[y, x]):
+                ax.text(x, y, f'{matriz[y, x]:.2f}', ha='center', va='center', color='black', fontsize=12)
+    
+    # Títulos y etiquetas
+    ax.set_title("Mapa Campimétrico - Total Deviation")
+    ax.set_xlabel("Coordenada X (0-8)")
+    ax.set_ylabel("Coordenada Y (0-7)")
+    
+    # Configurar los ticks para que coincidan con las coordenadas
+    ax.set_xticks(np.arange(0, 9))
+    ax.set_yticks(np.arange(0, 8))
+
+    # Línea horizontal en el medio
+    ax.axhline(y=3.5, color='black', linewidth=1)
+
+    # Línea vertical en el medio
+    ax.axvline(x=3.5, color='black', linewidth=1)
+    
+    # Mostrar el gráfico
+    plt.tight_layout()
+    plt.show()
+
+
+
 def main():
-    archivo = 'datos.json'  # Asegúrate de especificar el nombre correcto del archivo
+    archivo = 'datos.json'  # Nombre del archivo
     matriz = leer_datos_json(archivo)  # Lee los datos del JSON
-    graficar_mapa(matriz)  # Graficar el mapa con los datos
+    
+    # Habilitar el modo interactivo para que ambas ventanas se abran simultáneamente
+    plt.ion()  # Modo interactivo
+    
+    graficar_mapa_color(matriz)  # Graficar el mapa con los datos (ventana 1)
+    graficar_mapa_numeros_L(matriz)  # Graficar el mapa con los números en lugar de colores (ventana 2)
+    
+    # Deshabilitar el modo interactivo si es necesario
+    plt.ioff()  # Modo interactivo desactivado
 
 if __name__ == "__main__":
     main()
